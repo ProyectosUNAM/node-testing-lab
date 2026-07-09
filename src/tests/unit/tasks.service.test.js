@@ -43,6 +43,22 @@ describe("createTask (prueba unitaria)", () => {
         expect(fakePool.query).not.toHaveBeenCalled();
     });
 
+    //Ejercicio 1.3: Normalización del título (trim) ---- ACTIVIDAD 8: PRIORIDAD
+
+    test("crea la tarea con la prioridad indicada", async () => {
+        const fakePool = {
+            query: jest.fn().mockResolvedValue({
+                rows: [{ id: 1, title: "Estudiar", priority: "alta" }],
+            }),
+        };
+
+        const result = await createTask(
+            fakePool,
+            { title: "Estudiar", priority: "alta" }
+        );
+
+        expect(result.priority).toBe("alta");
+    });
 
 
 });
