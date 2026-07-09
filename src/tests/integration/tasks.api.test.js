@@ -100,3 +100,29 @@ test("DELETE /tasks/:id elimina la fila de la base de datos", async () => {
 });
 
 //Ejercicio 2.6 (propuesto): Independencia entre pruebas -- Medición de Performance Nativa (Performance API)
+
+//Ejercicio 2.7 (propuesto): Verificación del listado
+test("GET /tasks devuelve exactamente tres elementos ordenados por id ascendente", async () => {
+    // 1. Insertar tres tareas mediante POST /tasks secuencialmente
+    await request(app).post("/tasks").send({ title: "Primera tarea" });
+    await request(app).post("/tasks").send({ title: "Segunda tarea" });
+    await request(app).post("/tasks").send({ title: "Tercera tarea" });
+
+    // 2. Solicitar el listado completo mediante GET /tasks
+    const res = await request(app).get("/tasks");
+
+    // 3. Verificar el estado HTTP
+    expect(res.status).toBe(200);
+
+    // 4. Verificar que se devuelven exactamente tres elementos
+    expect(res.body).toHaveLength(3);
+
+    // 5. Verificar que estén ordenados por id de forma ascendente
+    expect(res.body[0].title).toBe("Primera tarea");
+    expect(res.body[1].title).toBe("Segunda tarea");
+    expect(res.body[2].title).toBe("Tercera tarea");
+    
+    // Verificación matemática explícita de los IDs correlativos
+    expect(res.body[0].id).toBeLessThan(res.body[1].id);
+    expect(res.body[1].id).toBeLessThan(res.body[2].id);
+});
