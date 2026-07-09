@@ -98,3 +98,5 @@ test("DELETE /tasks/:id elimina la fila de la base de datos", async () => {
     );
     expect(rows).toHaveLength(0);
 });
+
+//Ejercicio 2.6 (propuesto): Independencia entre pruebas -- Medición de Performance Nativa (Performance API)
