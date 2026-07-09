@@ -61,3 +61,14 @@ describe("Flujo completo de una tarea (E2E)", () => {
         expect(resFinal.status).toBe(404);
     });
 });
+
+//Ejercicio 3.3 (propuesto): Rechazo de datos inválidos de extremo a extremo
+test("POST /tasks con cuerpo vacío responde 400 Bad Request", async () => {
+    const res = await fetch(`${BASE_URL}/tasks`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}), // Enviamos un cuerpo vacío inválido
+    });
+
+    expect(res.status).toBe(400);
+});
