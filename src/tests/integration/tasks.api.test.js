@@ -61,3 +61,24 @@ test("GET /tasks/:id devuelve 404 si la tarea no existe", async () => {
     const res = await request(app).get("/tasks/9999");
     expect(res.status).toBe(404);
 });
+
+//Ejercicio 2.4: Actualización del estado done
+test("PUT /tasks/:id actualiza el estado en la base de datos", async () => {
+    // Primero creamos la tarea que vamos a actualizar.
+    const creada = await request(app)
+        .post("/tasks")
+        .send({ title: "Lavar el auto" });
+
+    const res = await request(app)
+        .put(`/tasks/${creada.body.id}`)
+        .send({ done: true });
+
+    expect(res.status).toBe(200);
+    expect(res.body.done).toBe(true);
+
+    const { rows } = await pool.query(
+        "SELECT done FROM tasks WHERE id = $1",
+        [creada.body.id]
+    );
+    expect(rows[0].done).toBe(true);
+});
