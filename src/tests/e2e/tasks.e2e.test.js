@@ -96,3 +96,19 @@ test("DELETE /tasks/:id responde 204 en el primer borrado y 404 en el segundo", 
     });
     expect(resBorrar2.status).toBe(404);
 });
+
+//Ejercicio 3.5 (propuesto): Sondeo del listado
+test("GET /tasks devuelve un arreglo y el Content-Type correcto", async () => {
+    const res = await fetch(`${BASE_URL}/tasks`);
+
+    // 1. Verificar el estado HTTP
+    expect(res.status).toBe(200);
+
+    // 2. Verificar que el encabezado Content-Type contiene application/json
+    const contentType = res.headers.get("content-type");
+    expect(contentType).toContain("application/json");
+
+    // 3. Verificar que la respuesta es un arreglo (Array)
+    const datos = await res.json();
+    expect(Array.isArray(datos)).toBe(true);
+});
