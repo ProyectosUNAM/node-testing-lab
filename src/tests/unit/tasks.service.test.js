@@ -76,6 +76,24 @@ describe("createTask (prueba unitaria)", () => {
         expect(result).toBeNull();
     });
 
+    //Ejercicio 1.5 (propuesto): Rechazo de tipos inválidos
 
+    test("rechaza la tarea si el titulo no es una cadena de texto (ej. 42 o null)", async () => {
+        // Pool falso sin respuesta programada: no debe tocar la BD si el tipo es inválido
+        const fakePool = { query: jest.fn() };
+
+        // 1. Probar con un número (42)
+        await expect(
+            createTask(fakePool, { title: 42 })
+        ).rejects.toThrow(); // Puedes poner el mensaje exacto si tu validación lo tiene
+
+        // 2. Probar con un valor null
+        await expect(
+            createTask(fakePool, { title: null })
+        ).rejects.toThrow();
+
+        // Verificamos que NUNCA se intentó consultar la base de datos
+        expect(fakePool.query).not.toHaveBeenCalled();
+    });
 
 });
