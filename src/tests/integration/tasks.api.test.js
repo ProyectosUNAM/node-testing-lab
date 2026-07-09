@@ -82,3 +82,19 @@ test("PUT /tasks/:id actualiza el estado en la base de datos", async () => {
     );
     expect(rows[0].done).toBe(true);
 });
+
+//Ejercicio 2.5: Eliminación efectiva de la fila
+test("DELETE /tasks/:id elimina la fila de la base de datos", async () => {
+    const creada = await request(app)
+        .post("/tasks")
+        .send({ title: "Tarea temporal" });
+
+    const res = await request(app).delete(`/tasks/${creada.body.id}`);
+    expect(res.status).toBe(204);
+
+    const { rows } = await pool.query(
+        "SELECT * FROM tasks WHERE id = $1",
+        [creada.body.id]
+    );
+    expect(rows).toHaveLength(0);
+});
