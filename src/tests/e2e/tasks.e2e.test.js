@@ -72,3 +72,27 @@ test("POST /tasks con cuerpo vacío responde 400 Bad Request", async () => {
 
     expect(res.status).toBe(400);
 });
+
+//Ejercicio 3.4 (propuesto): Idempotencia del borrado
+test("DELETE /tasks/:id responde 204 en el primer borrado y 404 en el segundo", async () => {
+    // 1. Crear la tarea de prueba
+    const resCrear = await fetch(`${BASE_URL}/tasks`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: "Tarea para borrar dos veces" }),
+    });
+    const tarea = await resCrear.json();
+    const id = tarea.id;
+
+    // 2. Primer borrado (Debe responder 204 ya que el recurso existe)
+    const resBorrar1 = await fetch(`${BASE_URL}/tasks/${id}`, {
+        method: "DELETE",
+    });
+    expect(resBorrar1.status).toBe(204);
+
+    // 3. Segundo borrado (Debe responder 404 ya que el recurso fue eliminado previamente)
+    const resBorrar2 = await fetch(`${BASE_URL}/tasks/${id}`, {
+        method: "DELETE",
+    });
+    expect(resBorrar2.status).toBe(404);
+});
