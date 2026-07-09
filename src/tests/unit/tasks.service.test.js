@@ -96,4 +96,24 @@ describe("createTask (prueba unitaria)", () => {
         expect(fakePool.query).not.toHaveBeenCalled();
     });
 
+            // Ejercicio 1.6 (propuesto): Simulación de un fallo de la base de datos
+    const { listTasks } = require("../../../src/services/tasks.service");
+    
+    test("listTasks propaga el error si la base de datos falla", async () => {
+        // Simulamos que PostgreSQL devuelve un error de conexión
+        const fakePool = {
+            query: jest.fn().mockRejectedValue(
+                new Error("connection refused")
+            ),
+        };
+
+        // Esperamos que la función listTasks propague (lance) el error simulado
+        await expect(
+            listTasks(fakePool)
+        ).rejects.toThrow("connection refused");
+
+        // Opcional: Verificar que al menos se intentó hacer la consulta
+        expect(fakePool.query).toHaveBeenCalled();
+    });
+
 });
