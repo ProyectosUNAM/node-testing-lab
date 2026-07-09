@@ -44,3 +44,20 @@ describe("POST /tasks (integracion con PostgreSQL real)", () => {
     expect(rows[0].priority).toBe("alta");
     });
 });
+
+//Ejercicio 2.2: La validación impide la escritura
+test("responde 400 si falta el titulo y no inserta nada", async () => {
+    const res = await request(app).post("/tasks").send({});
+
+    expect(res.status).toBe(400);
+
+    // Confirmamos contra la BD real que NO se inserto ninguna fila.
+    const { rows } = await pool.query("SELECT * FROM tasks");
+    expect(rows).toHaveLength(0);
+});
+
+//Ejercicio 2.3: Recurso inexistente devuelve 404
+test("GET /tasks/:id devuelve 404 si la tarea no existe", async () => {
+    const res = await request(app).get("/tasks/9999");
+    expect(res.status).toBe(404);
+});
