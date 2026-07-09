@@ -60,5 +60,22 @@ describe("createTask (prueba unitaria)", () => {
         expect(result.priority).toBe("alta");
     });
 
+    //Ejercicio 1.4: Recurso inexistente devuelve null
+
+    const { getTaskById,
+    } = require("../../../src/services/tasks.service");
+
+    test("getTaskById devuelve null cuando no hay resultados", async () => {
+        // Simulamos que la BD no devolvio ninguna fila.
+        const fakePool = {
+            query: jest.fn().mockResolvedValue({ rows: [] }),
+        };
+
+        const result = await getTaskById(fakePool, 999);
+
+        expect(result).toBeNull();
+    });
+
+
 
 });
